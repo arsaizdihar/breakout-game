@@ -1,6 +1,8 @@
 from constant import *
 import pygame
 import time
+import random
+from heart import Heart
 
 
 class Paddle:
@@ -37,8 +39,9 @@ class Paddle:
         self.x = self.init_x
         self.y = self.init_y
 
-    def shoot(self):
+    def shoot(self, sound):
         if self.shoot_cooldown <= 0:
+            sound.play()
             self.shoot_cooldown = SHOOT_COOLDOWN
             self.bullets.append(Bullet(self.get_rect().centerx - SIZE / 2, self.y - SIZE))
 
@@ -58,9 +61,13 @@ class Bullet:
     def check_out_of_window(self):
         return self.y <= SCOREBOARD_HEIGHT
 
-    def check_brick_collision(self, bricks):
+    def check_brick_collision(self, bricks, hearts):
         rect = self.get_rect()
         for brick in bricks:
             if rect.colliderect(brick.get_rect()):
-                bricks.remove(brick)
+                brick.life -= 1
+                if brick.life == 0:
+                    if random.random() >= 0.95:
+                        hearts.append(Heart(brick.get_rect().centerx - HEART_SIZE / 2, brick.y + brick.height))
+                    bricks.remove(brick)
                 return True

@@ -5,6 +5,7 @@ from constant import *
 class ScoreBoard:
     def __init__(self):
         self.score = 0
+        self.level = 1
         self.life = LIFE_START
         self.font = pygame.font.SysFont('Agency FB', 50)
         self.left_rect = pygame.rect.Rect(0, 0, WIDTH / 2, SCOREBOARD_HEIGHT)

@@ -4,6 +4,7 @@ from constant import *
 import math
 import random
 
+from heart import Heart
 from paddle import Paddle
 
 
@@ -59,7 +60,7 @@ class Ball:
                     self.angle = 150
                 return True
 
-    def brick_collision(self, bricks):
+    def brick_collision(self, bricks, hearts):
         if self.circle:
             circle_centerx = self.circle.centerx
             for brick in bricks:
@@ -70,7 +71,11 @@ class Ball:
                     else:
                         self.angle = 180 - self.angle
                     self.angle = (self.angle + 360) % 360
-                    bricks.remove(brick)
+                    brick.life -= 1
+                    if brick.life == 0:
+                        if random.random() >= 0.95:
+                            hearts.append(Heart(brick.get_rect().centerx - HEART_SIZE/2, brick.y + brick.height))
+                        bricks.remove(brick)
                     return True
 
     def check_dead(self):
